@@ -10,7 +10,7 @@
 
 ### 🚀 A Modern Web Platform for the Infinity Club Community
 
-[Live Demo](https://infinity-club.com) • [Documentation](docs/) • [Report Bug](issues/) • [Request Feature](issues/)
+[Live Demo](https://infinity-club-bba.vercel.app) • [Documentation](docs/) • [Report Bug](issues/) • [Request Feature](issues/)
 
 ![Project Preview](https://raw.githubusercontent.com/hamawebdev/infinity-club-site/main/public/preview.png)
 
