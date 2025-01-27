@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 280 50% 98%;
+    --foreground: 280 10% 10%;
+    --card: 280 50% 100%;
+    --card-foreground: 280 10% 10%;
+    --popover: 280 50% 100%;
+    --popover-foreground: 280 10% 10%;
+    --primary: 322 100% 51%;
+    --primary-foreground: 322 100% 98%;
+    --secondary: 271 91% 65%;
+    --secondary-foreground: 271 100% 98%;
+    --muted: 280 50% 90%;
+    --muted-foreground: 280 10% 40%;
+    --accent: 225 73% 57%;
+    --accent-foreground: 225 100% 98%;
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 280 20% 85%;
+    --input: 280 20% 85%;
+    --ring: 322 100% 51%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 280 50% 5%;
+    --foreground: 280 10% 95%;
+    --card: 280 50% 8%;
+    --card-foreground: 280 10% 95%;
+    --popover: 280 50% 8%;
+    --popover-foreground: 280 10% 95%;
+    --primary: 322 100% 51%;
+    --primary-foreground: 322 100% 98%;
+    --secondary: 271 91% 65%;
+    --secondary-foreground: 271 100% 98%;
+    --muted: 280 50% 15%;
+    --muted-foreground: 280 10% 70%;
+    --accent: 225 73% 57%;
+    --accent-foreground: 225 100% 98%;
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 280 20% 25%;
+    --input: 280 20% 25%;
+    --ring: 322 100% 51%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+.gradient-text {
+  @apply text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-quaternary;
+}
+
+.gradient-bg {
+  @apply bg-gradient-to-r from-primary via-secondary to-quaternary;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
