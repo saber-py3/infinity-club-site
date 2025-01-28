@@ -86,3 +86,13 @@ html {
   scroll-behavior: smooth;
 }
 
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.transform-gpu {
+  transform-style: preserve-3d;
+  transform: perspective(1000px);
+}
+

@@ -59,10 +59,10 @@
     "vaul": "^0.9.6",
     "zod": "^3.24.1",
     "framer-motion": "latest",
+    "react-icons": "latest",
     "react-intersection-observer": "latest",
     "@react-three/fiber": "latest",
-    "@react-three/drei": "latest",
-    "react-icons": "latest"
+    "@react-three/drei": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",
