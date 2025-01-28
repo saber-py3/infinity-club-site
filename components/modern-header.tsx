@@ -12,6 +12,7 @@ export function ModernHeader() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
+  const [isHovered, setIsHovered] = useState(false)
 
   const springConfig = { damping: 25, stiffness: 200 }
   const mouseX = useSpring(0, springConfig)
@@ -25,13 +26,22 @@ export function ModernHeader() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
+  // Reset position when not hovered
+  useEffect(() => {
+    if (!isHovered) {
+      mouseX.set(0)
+      mouseY.set(0)
+    }
+  }, [isHovered])
+
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
+    if (!isHovered) return
     const rect = e.currentTarget.getBoundingClientRect()
     const x = e.clientX - rect.left
     const y = e.clientY - rect.top
     mouseX.set(x)
     mouseY.set(y)
-  }, [])
+  }, [isHovered])
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
 
@@ -39,7 +49,7 @@ export function ModernHeader() {
     [mouseX, mouseY],
     ([x, y]) => `radial-gradient(
       600px circle at ${x}px ${y}px,
-      rgba(255,255,255,.1),
+      rgba(255,255,255,${isHovered ? 0.1 : 0}),
       transparent 40%
     )`
   )
@@ -55,6 +65,10 @@ export function ModernHeader() {
 
   return (
     <motion.header
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onMouseMove={handleMouseMove}
+      style={{ backgroundImage: gradientTransform }}
       className={cn(
         "fixed top-4 left-4 right-4 z-50 transition-all duration-300",
         "rounded-full backdrop-blur-md border border-white/10",
@@ -63,8 +77,6 @@ export function ModernHeader() {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
-      onMouseMove={handleMouseMove}
-      style={{ backgroundImage: gradientTransform }}
     >
       <div className="container flex items-center justify-between py-3 px-6">
         <Link href="/" className="relative z-10">
