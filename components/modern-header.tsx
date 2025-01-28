@@ -14,9 +14,13 @@ export function ModernHeader() {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
   const [isHovered, setIsHovered] = useState(false)
 
-  const springConfig = { damping: 25, stiffness: 200 }
+  // Spring configuration for smoother transitions
+  const springConfig = { damping: 30, stiffness: 150, mass: 0.5 }
+  
+  // Separate springs for position and opacity
   const mouseX = useSpring(0, springConfig)
   const mouseY = useSpring(0, springConfig)
+  const opacity = useSpring(0, { ...springConfig, damping: 20 })
 
   useEffect(() => {
     const handleScroll = () => {
@@ -35,21 +39,29 @@ export function ModernHeader() {
   }, [isHovered])
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
-    if (!isHovered) return
     const rect = e.currentTarget.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
-    mouseX.set(x)
-    mouseY.set(y)
-  }, [isHovered])
+    mouseX.set(e.clientX - rect.left)
+    mouseY.set(e.clientY - rect.top)
+  }, [])
+
+  const handleMouseEnter = useCallback(() => {
+    opacity.set(0.1)
+  }, [])
+
+  const handleMouseLeave = useCallback(() => {
+    opacity.set(0)
+    // Smoothly reset position
+    mouseX.set(0, true)
+    mouseY.set(0, true)
+  }, [])
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
 
   const gradientTransform = useTransform(
-    [mouseX, mouseY],
-    ([x, y]) => `radial-gradient(
+    [mouseX, mouseY, opacity],
+    ([x, y, o]) => `radial-gradient(
       600px circle at ${x}px ${y}px,
-      rgba(255,255,255,${isHovered ? 0.1 : 0}),
+      rgba(255,255,255,${o}),
       transparent 40%
     )`
   )
@@ -68,6 +80,8 @@ export function ModernHeader() {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onMouseMove={handleMouseMove}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       style={{ backgroundImage: gradientTransform }}
       className={cn(
         "fixed top-4 left-4 right-4 z-50 transition-all duration-300",
