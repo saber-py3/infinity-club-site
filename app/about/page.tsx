@@ -1,6 +1,7 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { motion, useInView, useAnimate, useMotionValue, useTransform } from "framer-motion"
+import { useEffect, useRef } from "react"
 import { SpotlightCard } from "@/components/spotlight-card"
 import { AnimatedHeader } from "@/components/animated-header"
 
@@ -16,6 +17,28 @@ const staggerChildren = {
       staggerChildren: 0.1,
     },
   },
+}
+
+const CounterAnimation = ({ value }: { value: string }) => {
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true })
+  const numericValue = Number.parseInt(value.replace("+", ""))
+  const [scope, animate] = useAnimate()
+  const count = useMotionValue(0)
+  const rounded = useTransform(count, (latest) => Math.round(latest))
+
+  useEffect(() => {
+    if (inView) {
+      animate(count, numericValue, { duration: 1, ease: "easeOut" })
+    }
+  }, [inView, animate, count, numericValue])
+
+  return (
+    <span ref={ref} className="text-4xl font-bold mb-2 gradient-text">
+      <motion.span ref={scope}>{rounded}</motion.span>
+      {value.includes("+") && "+"}
+    </span>
+  )
 }
 
 export default function About() {
@@ -79,7 +102,7 @@ export default function About() {
             ].map((achievement, index) => (
               <motion.div key={index} variants={fadeInUp} className="col-span-1">
                 <SpotlightCard className="p-6 text-center h-full flex flex-col justify-center items-center">
-                  <h3 className="text-4xl font-bold mb-2 gradient-text">{achievement.value}</h3>
+                  <CounterAnimation value={achievement.value} />
                   <p className="text-lg text-muted-foreground">{achievement.title}</p>
                 </SpotlightCard>
               </motion.div>

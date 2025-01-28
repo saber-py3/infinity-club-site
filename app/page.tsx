@@ -1,11 +1,12 @@
 "use client"
 
 import { useRef } from "react"
+import Image from "next/image"
 import Link from "next/link"
 import { motion, useScroll, useTransform } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { SpotlightCard } from "@/components/spotlight-card"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { CardContent } from "@/components/ui/card"
 import { AnimatedHeader } from "@/components/animated-header"
 import WelcomeSection from "@/components/welcome-section"
 import SocialFooter from "@/components/social-footer"
@@ -46,23 +47,29 @@ export default function Home() {
     {
       id: 1,
       title: "AI Workshop",
+      date: "2023-07-15",
+      time: "14:00",
+      location: "Tech Hub, Room 101",
       description: "Join us for an exciting workshop on Artificial Intelligence!",
-      date: "July 15, 2023",
-      author: "Dr. Jane Smith",
+      image: "/placeholder.svg?height=400&width=600",
     },
     {
       id: 2,
       title: "Hackathon 2023",
+      date: "2023-08-01",
+      time: "09:00",
+      location: "Innovation Center",
       description: "24-hour coding challenge with amazing prizes!",
-      date: "August 1, 2023",
-      author: "Infinity Club Team",
+      image: "/placeholder.svg?height=400&width=600",
     },
     {
       id: 3,
       title: "Tech Talk: Future of Web Development",
+      date: "2023-08-15",
+      time: "18:00",
+      location: "Virtual Event",
       description: "Learn about the latest trends in web development.",
-      date: "August 15, 2023",
-      author: "John Doe",
+      image: "/placeholder.svg?height=400&width=600",
     },
   ]
 
@@ -70,23 +77,30 @@ export default function Home() {
     {
       id: 1,
       title: "Introduction to Machine Learning",
-      description: "Learn the basics of machine learning and its applications.",
-      date: "June 1, 2023",
+      category: "AI",
       author: "Jane Doe",
+      date: "2023-06-01",
+      description: "Learn the basics of machine learning and its applications in various industries.",
+      image: "/placeholder.svg?height=400&width=600",
     },
     {
       id: 2,
       title: "Web Development Best Practices",
-      description: "Discover the latest best practices in web development.",
-      date: "May 15, 2023",
+      category: "Web Development",
       author: "John Smith",
+      date: "2023-05-15",
+      description:
+        "Discover the latest best practices in web development to create efficient and scalable applications.",
+      image: "/placeholder.svg?height=400&width=600",
     },
     {
       id: 3,
       title: "The Future of Artificial Intelligence",
-      description: "Explore the potential future developments in AI technology.",
-      date: "May 1, 2023",
+      category: "AI",
       author: "Alice Johnson",
+      date: "2023-05-01",
+      description: "Explore the potential future developments in AI technology and their impact on society.",
+      image: "/placeholder.svg?height=400&width=600",
     },
   ]
 
@@ -110,18 +124,34 @@ export default function Home() {
             >
               {events.map((event) => (
                 <motion.div key={event.id} variants={itemVariants}>
-                  <SpotlightCard className="h-full flex flex-col hover:shadow-lg transition-shadow duration-300">
-                    <CardHeader>
-                      <CardTitle className="gradient-text">{event.title}</CardTitle>
-                      <CardDescription>
-                        {event.date} | By {event.author}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="flex-grow flex flex-col justify-between">
-                      <p className="text-muted-foreground mb-4">{event.description}</p>
-                      <Link href={`/events/${event.id}`} className="text-primary hover:underline mt-auto">
-                        Learn more
-                      </Link>
+                  <SpotlightCard className="overflow-hidden h-full flex flex-col transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:scale-[1.02]">
+                    <div className="relative h-48 overflow-hidden">
+                      <Image
+                        src={event.image || "/placeholder.svg"}
+                        alt={event.title}
+                        layout="fill"
+                        objectFit="cover"
+                        className="transition-transform duration-300 transform hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                      <div className="absolute bottom-4 left-4 text-white">
+                        <p className="text-sm font-semibold">
+                          {event.date} at {event.time}
+                        </p>
+                        <p className="text-xs">{event.location}</p>
+                      </div>
+                    </div>
+                    <CardContent className="p-6 flex-grow flex flex-col">
+                      <h3 className="text-xl font-bold mb-2 gradient-text">{event.title}</h3>
+                      <p className="text-muted-foreground mb-4 flex-grow">{event.description}</p>
+                      <div className="flex justify-end">
+                        <Link
+                          href={`/events/${event.id}`}
+                          className="inline-block px-4 py-2 bg-primary text-white rounded-full text-sm font-semibold hover:bg-primary/80 transition-colors duration-300 hover:shadow-md"
+                        >
+                          Learn More
+                        </Link>
+                      </div>
                     </CardContent>
                   </SpotlightCard>
                 </motion.div>
@@ -140,18 +170,33 @@ export default function Home() {
             >
               {articles.map((article) => (
                 <motion.div key={article.id} variants={itemVariants}>
-                  <SpotlightCard className="h-full flex flex-col hover:shadow-lg transition-shadow duration-300">
-                    <CardHeader>
-                      <CardTitle className="gradient-text">{article.title}</CardTitle>
-                      <CardDescription>
-                        {article.date} | By {article.author}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="flex-grow flex flex-col justify-between">
-                      <p className="text-muted-foreground mb-4">{article.description}</p>
-                      <Link href={`/articles/${article.id}`} className="text-primary hover:underline mt-auto">
-                        Read more
-                      </Link>
+                  <SpotlightCard className="overflow-hidden h-full flex flex-col transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:scale-[1.02]">
+                    <div className="relative h-48 overflow-hidden">
+                      <Image
+                        src={article.image || "/placeholder.svg"}
+                        alt={article.title}
+                        layout="fill"
+                        objectFit="cover"
+                        className="transition-transform duration-300 transform hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                      <div className="absolute bottom-4 left-4 text-white">
+                        <p className="text-sm font-semibold">{article.category}</p>
+                        <p className="text-xs">{article.date}</p>
+                      </div>
+                    </div>
+                    <CardContent className="p-6 flex-grow flex flex-col">
+                      <h3 className="text-xl font-bold mb-2 gradient-text">{article.title}</h3>
+                      <p className="text-sm text-muted-foreground mb-2">By {article.author}</p>
+                      <p className="text-muted-foreground mb-4 flex-grow">{article.description}</p>
+                      <div className="flex justify-end">
+                        <Link
+                          href={`/articles/${article.id}`}
+                          className="inline-block px-4 py-2 bg-primary text-white rounded-full text-sm font-semibold hover:bg-primary/80 transition-colors duration-300 hover:shadow-md"
+                        >
+                          Read More
+                        </Link>
+                      </div>
                     </CardContent>
                   </SpotlightCard>
                 </motion.div>
