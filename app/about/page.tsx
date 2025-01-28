@@ -4,6 +4,7 @@ import { motion, useInView, useAnimate, useMotionValue, useTransform } from "fra
 import { useEffect, useRef } from "react"
 import { SpotlightCard } from "@/components/spotlight-card"
 import { AnimatedHeader } from "@/components/animated-header"
+import TrueFocus from "@/components/TrueFocus"
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -51,7 +52,16 @@ export default function About() {
         variants={staggerChildren}
       >
         <motion.section variants={fadeInUp} className="text-center mb-16">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 gradient-text">About Infinity Club</h1>
+          <div className="mb-6">
+            <TrueFocus 
+              sentence="Infinity Club"
+              borderColor="#6366f1" // Using a color that matches your theme
+              glowColor="rgba(99, 102, 241, 0.6)"
+              animationDuration={0.8}
+              pauseBetweenAnimations={2}
+              className="text-5xl md:text-6xl font-bold gradient-text"
+            />
+          </div>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Empowering the next generation of tech innovators through collaboration, learning, and innovation.
           </p>
@@ -131,4 +141,3 @@ export default function About() {
     </div>
   )
 }
-
