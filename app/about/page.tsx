@@ -4,7 +4,7 @@ import { motion, useInView, useAnimate, useMotionValue, useTransform } from "fra
 import { useEffect, useRef } from "react"
 import { SpotlightCard } from "@/components/spotlight-card"
 import { AnimatedHeader } from "@/components/animated-header"
-import TrueFocus from "@/components/TrueFocus"
+import TrueFocus from "@/components/ui/TrueFocus"
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
