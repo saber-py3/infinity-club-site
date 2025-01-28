@@ -2,14 +2,17 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { ModeToggle } from "@/components/mode-toggle"
 import { Menu, X } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 const ModernHeader = () => {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -19,87 +22,124 @@ const ModernHeader = () => {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    setMousePosition({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    })
+  }
+
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
 
-  const menuItems = ["Home", "About", "Articles", "Members", "Events", "Contact"]
+  const menuItems = [
+    { name: "Home", href: "/" },
+    { name: "About", href: "/about" },
+    { name: "Articles", href: "/articles" },
+    { name: "Members", href: "/members" },
+    { name: "Events", href: "/events" },
+    { name: "Contact", href: "/contact" },
+  ]
 
   return (
     <motion.header
-      className={`sticky top-0 z-50 transition-all duration-300 ${
-        isScrolled ? "bg-background/80 backdrop-blur-md shadow-md" : "bg-transparent"
-      }`}
+      className={cn(
+        "fixed top-4 left-4 right-4 z-50 transition-all duration-300",
+        "rounded-full backdrop-blur-md border border-white/10",
+        isScrolled ? "bg-background/80 shadow-lg" : "bg-background/40",
+      )}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
+      onMouseMove={handleMouseMove}
+      style={{
+        backgroundImage: hoveredItem
+          ? `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(255,255,255,.1), transparent 40%)`
+          : "",
+      }}
     >
-      <div className="container flex items-center justify-between py-4">
-        <Link href="/" className="text-2xl font-bold">
+      <div className="container flex items-center justify-between py-3 px-6">
+        <Link href="/" className="relative z-10">
           <motion.span
-            className="inline-block gradient-text"
+            className="text-2xl font-bold gradient-text"
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
+            onMouseEnter={() => setHoveredItem("logo")}
+            onMouseLeave={() => setHoveredItem(null)}
           >
             Infinity Club
           </motion.span>
         </Link>
-        <nav className="hidden md:flex space-x-4">
+
+        <nav className="hidden md:flex items-center space-x-8">
           {menuItems.map((item) => (
             <Link
-              key={item}
-              href={item === "Home" ? "/" : `/${item.toLowerCase()}`}
-              className="relative overflow-hidden group"
+              key={item.name}
+              href={item.href}
+              className="relative group"
+              onMouseEnter={() => setHoveredItem(item.name)}
+              onMouseLeave={() => setHoveredItem(null)}
             >
-              <span className="inline-block transition-transform duration-300 group-hover:-translate-y-full">
-                {item}
+              <span className="relative z-10 text-sm font-medium transition-colors duration-300 group-hover:text-primary">
+                {item.name}
               </span>
-              <span className="inline-block absolute top-full left-0 transition-transform duration-300 group-hover:-translate-y-full text-primary">
-                {item}
-              </span>
+              <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-primary transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100" />
             </Link>
           ))}
         </nav>
+
         <div className="flex items-center space-x-4">
           <ModeToggle />
-          <Button asChild className="gradient-bg text-white hidden md:flex">
+          <Button
+            asChild
+            className="gradient-bg text-white hidden md:flex"
+            onMouseEnter={() => setHoveredItem("join")}
+            onMouseLeave={() => setHoveredItem(null)}
+          >
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Link href="/join">Join Us</Link>
             </motion.div>
           </Button>
-          <button className="md:hidden text-foreground" onClick={toggleMenu} aria-label="Toggle menu">
+          <button
+            className="md:hidden text-foreground p-2 hover:bg-accent rounded-full"
+            onClick={toggleMenu}
+            aria-label="Toggle menu"
+          >
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
       </div>
-      <AnimatePresence>
-        {isMenuOpen && (
-          <motion.div
-            className="md:hidden bg-background absolute top-full left-0 right-0 z-50"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <nav className="container py-4 flex flex-col space-y-4">
-              {menuItems.map((item) => (
-                <Link
-                  key={item}
-                  href={item === "Home" ? "/" : `/${item.toLowerCase()}`}
-                  className="text-foreground hover:text-primary transition-colors duration-300"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {item}
-                </Link>
-              ))}
-              <Button asChild className="gradient-bg text-white w-full">
-                <Link href="/join" onClick={() => setIsMenuOpen(false)}>
-                  Join Us
-                </Link>
-              </Button>
-            </nav>
-          </motion.div>
+
+      {/* Mobile Menu */}
+      <motion.div
+        className={cn(
+          "md:hidden absolute top-full left-0 right-0 mt-4 mx-4 overflow-hidden rounded-2xl",
+          "backdrop-blur-md border border-white/10",
+          isScrolled ? "bg-background/80" : "bg-background/40",
         )}
-      </AnimatePresence>
+        initial={{ opacity: 0, height: 0 }}
+        animate={{ opacity: isMenuOpen ? 1 : 0, height: isMenuOpen ? "auto" : 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <nav className="p-4 flex flex-col space-y-4">
+          {menuItems.map((item) => (
+            <Link
+              key={item.name}
+              href={item.href}
+              className="text-foreground hover:text-primary transition-colors duration-300 text-sm font-medium"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              {item.name}
+            </Link>
+          ))}
+          <Button asChild className="gradient-bg text-white w-full">
+            <Link href="/join" onClick={() => setIsMenuOpen(false)}>
+              Join Us
+            </Link>
+          </Button>
+        </nav>
+      </motion.div>
     </motion.header>
   )
 }
