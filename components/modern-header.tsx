@@ -1,18 +1,21 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import Link from "next/link"
-import { motion } from "framer-motion"
+import { motion, useSpring, useTransform } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { ModeToggle } from "@/components/mode-toggle"
 import { Menu, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 
-const ModernHeader = () => {
+export function ModernHeader() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
+
+  const springConfig = { damping: 25, stiffness: 200 }
+  const mouseX = useSpring(0, springConfig)
+  const mouseY = useSpring(0, springConfig)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,15 +25,24 @@ const ModernHeader = () => {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
     const rect = e.currentTarget.getBoundingClientRect()
-    setMousePosition({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    })
-  }
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    mouseX.set(x)
+    mouseY.set(y)
+  }, [])
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
+
+  const gradientTransform = useTransform(
+    [mouseX, mouseY],
+    ([x, y]) => `radial-gradient(
+      600px circle at ${x}px ${y}px,
+      rgba(255,255,255,.1),
+      transparent 40%
+    )`
+  )
 
   const menuItems = [
     { name: "Home", href: "/" },
@@ -52,11 +64,7 @@ const ModernHeader = () => {
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
       onMouseMove={handleMouseMove}
-      style={{
-        backgroundImage: hoveredItem
-          ? `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(255,255,255,.1), transparent 40%)`
-          : "",
-      }}
+      style={{ backgroundImage: gradientTransform }}
     >
       <div className="container flex items-center justify-between py-3 px-6">
         <Link href="/" className="relative z-10">
