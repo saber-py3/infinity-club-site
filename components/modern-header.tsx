@@ -74,7 +74,7 @@ const ModernHeader = () => {
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
-            className="md:hidden bg-background"
+            className="md:hidden bg-background absolute top-full left-0 right-0 z-50"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}

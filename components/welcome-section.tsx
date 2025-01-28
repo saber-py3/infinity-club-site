@@ -25,7 +25,11 @@ export default function WelcomeSection() {
   const yOffset = useTransform(scrollYProgress, [0, 1], ["0%", "50%"])
 
   return (
-    <motion.div ref={containerRef} className="h-screen w-full relative overflow-hidden" style={{ y: yOffset }}>
+    <motion.div
+      ref={containerRef}
+      className="h-screen w-full relative overflow-hidden"
+      style={{ y: yOffset, minHeight: "100vh" }}
+    >
       <Canvas className="absolute inset-0">
         <ambientLight intensity={0.5} />
         <pointLight position={[10, 10, 10]} />

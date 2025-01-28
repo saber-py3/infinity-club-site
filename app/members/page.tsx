@@ -3,9 +3,11 @@
 import { useState, useEffect } from "react"
 import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { SpotlightCard } from "@/components/spotlight-card"
+import { CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { AnimatedHeader } from "@/components/animated-header"
+import { FaLinkedin, FaGithub, FaTwitter } from "react-icons/fa"
 
 // This would typically come from an API or CMS
 const members = [
@@ -17,9 +19,9 @@ const members = [
     image: "/placeholder.svg",
     skills: ["AI", "Machine Learning", "Python"],
     social: {
-      twitter: "https://twitter.com/janedoe",
       linkedin: "https://linkedin.com/in/janedoe",
       github: "https://github.com/janedoe",
+      twitter: "https://twitter.com/janedoe",
     },
   },
   {
@@ -30,9 +32,9 @@ const members = [
     image: "/placeholder.svg",
     skills: ["React", "Node.js", "TypeScript"],
     social: {
-      twitter: "https://twitter.com/johnsmith",
       linkedin: "https://linkedin.com/in/johnsmith",
       github: "https://github.com/johnsmith",
+      twitter: "https://twitter.com/johnsmith",
     },
   },
   {
@@ -43,9 +45,9 @@ const members = [
     image: "/placeholder.svg",
     skills: ["UI/UX", "Figma", "Adobe Creative Suite"],
     social: {
-      twitter: "https://twitter.com/alicejohnson",
       linkedin: "https://linkedin.com/in/alicejohnson",
       github: "https://github.com/alicejohnson",
+      twitter: "https://twitter.com/alicejohnson",
     },
   },
   {
@@ -56,9 +58,9 @@ const members = [
     image: "/placeholder.svg",
     skills: ["Data Analysis", "R", "Tableau"],
     social: {
-      twitter: "https://twitter.com/bobwilliams",
       linkedin: "https://linkedin.com/in/bobwilliams",
       github: "https://github.com/bobwilliams",
+      twitter: "https://twitter.com/bobwilliams",
     },
   },
   {
@@ -69,9 +71,9 @@ const members = [
     image: "/placeholder.svg",
     skills: ["Network Security", "Ethical Hacking", "Cryptography"],
     social: {
-      twitter: "https://twitter.com/evabrown",
       linkedin: "https://linkedin.com/in/evabrown",
       github: "https://github.com/evabrown",
+      twitter: "https://twitter.com/evabrown",
     },
   },
   {
@@ -82,9 +84,9 @@ const members = [
     image: "/placeholder.svg",
     skills: ["Unity", "ARKit", "VR Development"],
     social: {
-      twitter: "https://twitter.com/mikdavis",
-      linkedin: "https://linkedin.com/in/mikdavis",
-      github: "https://github.com/mikdavis",
+      linkedin: "https://linkedin.com/in/mikedavis",
+      github: "https://github.com/mikedavis",
+      twitter: "https://twitter.com/mikedavis",
     },
   },
 ]
@@ -97,7 +99,8 @@ export default function Members() {
     const results = members.filter(
       (member) =>
         member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        member.role.toLowerCase().includes(searchTerm.toLowerCase()),
+        member.role.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        member.skills.some((skill) => skill.toLowerCase().includes(searchTerm.toLowerCase())),
     )
     setFilteredMembers(results)
   }, [searchTerm])
@@ -114,7 +117,7 @@ export default function Members() {
       >
         <Input
           type="text"
-          placeholder="Search members..."
+          placeholder="Search members by name, role, or skill..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="w-full max-w-md"
@@ -127,53 +130,66 @@ export default function Members() {
             <motion.div
               key={member.id}
               layout
-              initial={{ opacity: 0, scale: 0.8 }}
+              initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              transition={{ duration: 0.5 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.3 }}
             >
-              <Card className="h-full flex flex-col overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
-                <CardHeader className="relative h-64">
+              <SpotlightCard className="overflow-hidden h-full flex flex-col transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:scale-[1.02]">
+                <div className="relative h-48 overflow-hidden">
                   <Image
                     src={member.image || "/placeholder.svg"}
                     alt={member.name}
                     layout="fill"
                     objectFit="cover"
-                    className="rounded-t-lg transition-transform duration-300 transform hover:scale-110"
+                    className="transition-transform duration-300 transform hover:scale-110"
                   />
-                </CardHeader>
-                <CardContent className="flex-grow flex flex-col justify-between p-6">
-                  <div>
-                    <CardTitle className="text-2xl font-bold mb-2 gradient-text">{member.name}</CardTitle>
-                    <CardDescription className="text-lg font-semibold mb-4">{member.role}</CardDescription>
-                    <p className="text-muted-foreground mb-4">{member.bio}</p>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  <div className="absolute bottom-4 left-4 text-white">
+                    <h3 className="text-xl font-bold">{member.name}</h3>
+                    <p className="text-sm">{member.role}</p>
                   </div>
-                  <div>
+                </div>
+                <CardContent className="p-6 flex-grow flex flex-col">
+                  <p className="text-muted-foreground mb-4 flex-grow">{member.bio}</p>
+                  <div className="mb-4">
                     <h4 className="font-semibold mb-2">Skills:</h4>
-                    <div className="flex flex-wrap gap-2 mb-4">
+                    <div className="flex flex-wrap gap-2">
                       {member.skills.map((skill, index) => (
                         <span key={index} className="bg-primary/10 text-primary px-2 py-1 rounded-full text-sm">
                           {skill}
                         </span>
                       ))}
                     </div>
-                    <div className="flex justify-center space-x-4">
-                      {Object.entries(member.social).map(([platform, url]) => (
-                        <a
-                          key={platform}
-                          href={url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-primary hover:text-secondary transition-colors duration-300"
-                        >
-                          {/* Assuming you have Font Awesome icons available */}
-                          <i className={`fab fa-${platform} text-2xl`}></i>
-                        </a>
-                      ))}
-                    </div>
+                  </div>
+                  <div className="flex justify-center space-x-4">
+                    <a
+                      href={member.social.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 transition-colors duration-300"
+                    >
+                      <FaLinkedin size={24} />
+                    </a>
+                    <a
+                      href={member.social.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gray-800 hover:text-gray-600 transition-colors duration-300"
+                    >
+                      <FaGithub size={24} />
+                    </a>
+                    <a
+                      href={member.social.twitter}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-400 hover:text-blue-600 transition-colors duration-300"
+                    >
+                      <FaTwitter size={24} />
+                    </a>
                   </div>
                 </CardContent>
-              </Card>
+              </SpotlightCard>
             </motion.div>
           ))}
         </motion.div>
