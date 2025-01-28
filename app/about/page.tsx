@@ -44,7 +44,7 @@ const CounterAnimation = ({ value }: { value: string }) => {
 
 export default function About() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-background/80">
+    <div className="min-h-screen bg-gradient-to-b from-background to-background/80 pt-28">
       <motion.div
         className="container mx-auto px-4 py-16 space-y-16"
         initial="initial"
@@ -52,7 +52,7 @@ export default function About() {
         variants={staggerChildren}
       >
         <motion.section variants={fadeInUp} className="text-center mb-16">
-          <div className="mb-6">
+          <div className="mb-6 relative z-10">
             <TrueFocus 
               sentence="Infinity Club"
               borderColor="#6366f1" // Using a color that matches your theme
