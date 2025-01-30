@@ -1,7 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ["class"],
-  content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
+  content: [
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
   theme: {
     container: {
       center: true,
@@ -12,6 +17,23 @@ module.exports = {
     },
     extend: {
       colors: {
+        // Dark Mode Palette
+        dark: {
+          background: "#0D0D0D", // Deep Black
+          text: "#EAEAEA", // Soft White
+          accent1: "#6AFF76", // Neon Tech Green
+          accent2: "#00D4FF", // Electric Cyan
+          contrast: "#7B61FF", // Neon Purple
+        },
+        // Light Mode Palette
+        light: {
+          background: "#F5F7FA", // Soft Cloud White
+          text: "#212121", // Charcoal Black
+          accent1: "#6AFF76", // Neon Tech Green
+          accent2: "#0078A0", // Deep Teal
+          contrast: "#5E42E6", // Sleek Purple
+        },
+        // Existing colors (keep these if they are used elsewhere in your project)
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -70,5 +92,4 @@ module.exports = {
     },
   },
   plugins: [require("tailwindcss-animate")],
-}
-
+};
