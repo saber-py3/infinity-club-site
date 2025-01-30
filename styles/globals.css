@@ -48,6 +48,8 @@ body {
     --sidebar-accent-foreground: 0 0% 98%; /* White for contrast */
     --sidebar-border: 240 5.9% 90%; /* Light Gray */
     --sidebar-ring: 240 5.9% 10%; /* Dark Gray */
+    --contrast: 258 64% 64%; /* Sleek Purple (#5E42E6) */
+    --contrast-foreground: 0 0% 98%; /* White for contrast */
   }
 
   .dark {
@@ -84,6 +86,8 @@ body {
     --sidebar-accent-foreground: 0 0% 5%; /* Deep Black for contrast */
     --sidebar-border: 240 3.7% 15.9%; /* Dark Gray */
     --sidebar-ring: 240 4.8% 95.9%; /* Light Gray */
+    --contrast: 258 100% 72%; /* Neon Purple (#7B61FF) */
+    --contrast-foreground: 0 0% 5%; /* Deep Black for contrast */
   }
 }
 
